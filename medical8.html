@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Help</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="navbar">
+        <h2 class="logo">Mylogo</h2>
+        <div class="nav-links">
+            <a href="">Home</a>
+            <a href="">Services</a>
+            <a href="">Login</a>
+        </div>
+    </div>
+
+    <div class="home">
+        <h1>Your Health, Our Priority</h1>
+        <p>Get instant medical guidance and support 24/7.</p>
+    </div>
+    <div id="chat" class="chat-box"></div>
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Type your message.." onkeypress="if(event.key==='Enter') sendMessage();">
+        <button id="send" class="btn" onclick="sendMessage()">Send</button>
+    </div>
+    <script>
+        function sendMessage(){
+            const input=document.getElementById('input');
+            const chat=document.getElementById('chat');
+            const message=input.value.trim();
+
+            if(!message) return;
+
+            chat.innerHTML+='<div class="user">You: '+ message + '</div>';
+            input.value= '';
+
+            fetch('/chat',{
+                method:'POST',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({message:message})
+            })
+            .then(response=>response.json())
+            .then(data=>{
+
+                chat.innerHTML +='<div class="bot"> '  +data.response+'</div>';
+                chat.scrollTop = chat.scrollHeight;
+            })
+        }
+    </script>
+
+</body>
+</html>
